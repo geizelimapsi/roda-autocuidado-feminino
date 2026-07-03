@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roda do Autocuidado Feminino</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #FBF6F0;
+    --bg-soft: #F5EDE4;
+    --card: #FFFDFA;
+    --plum: #3B2233;
+    --plum-soft: #6B4E5E;
+    --rose: #C97A93;
+    --rose-deep: #B15C7C;
+    --gold: #C9A15A;
+    --sage: #7C8B6F;
+    --wine: #7A2942;
+    --line: #E7D9CE;
+    --sidebar-w: 292px;
+    --shadow: 0 10px 30px -12px rgba(59,34,51,0.18);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--plum);
+    font-family:'Manrope', sans-serif;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{
+    font-family:'Fraunces', serif;
+    color:var(--plum);
+    margin:0 0 .5em 0;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  p{margin:0 0 1em 0;}
+  .eyebrow{
+    font-family:'Manrope',sans-serif;
+    font-size:.72rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--rose-deep);
+    font-weight:700;
+    margin-bottom:.9em;
+    display:block;
+  }
+  .wrap{max-width:760px; margin:0 auto; padding:0 8px;}
+  .wrap-wide{max-width:960px; margin:0 auto; padding:0 8px;}
+  button{font-family:'Manrope',sans-serif;}
+
+  /* ===== APP SHELL ===== */
+  .app-shell{display:flex; min-height:100vh;}
+
+  /* SIDEBAR */
+  .sidebar{
+    width:var(--sidebar-w); flex:0 0 auto;
+    background:var(--plum);
+    color:#EFE2E7;
+    padding:30px 22px 24px;
+    position:sticky; top:0; height:100vh; overflow-y:auto;
+  }
+  .sidebar-brand{
+    font-family:'Fraunces',serif; font-size:1.08rem; color:#fff; margin-bottom:2px;
+  }
+  .sidebar-brand .sub{
+    font-family:'Manrope'; font-size:.72rem; color:#C6A9B6; text-transform:uppercase; letter-spacing:.1em;
+  }
+  .sidebar-divider{height:1px; background:rgba(255,255,255,.12); margin:22px 0 16px;}
+  .sidebar-group-label{
+    font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:#C6A9B6; font-weight:700;
+    margin:0 0 10px 4px;
+  }
+  .nav-item{
+    display:flex; align-items:center; gap:10px;
+    width:100%; text-align:left; background:none; border:none; color:#EFE2E7;
+    padding:11px 12px; border-radius:11px; font-size:.9rem; font-weight:600; cursor:pointer;
+    margin-bottom:3px; text-decoration:none;
+    transition:background .18s ease, color .18s ease;
+  }
+  .nav-item:hover{background:rgba(255,255,255,.08);}
+  .nav-item.active{background:var(--rose); color:#fff;}
+  .nav-item .num{
+    flex:0 0 auto; width:24px; height:24px; border-radius:50%;
+    background:rgba(255,255,255,.12); display:flex; align-items:center; justify-content:center;
+    font-size:.68rem; font-weight:800; font-family:'Manrope';
+  }
+  .nav-item.active .num{background:rgba(255,255,255,.28);}
+  .nav-item .dot-swatch{width:9px; height:9px; border-radius:50%; flex:0 0 auto;}
+  .nav-item.plano-link{
+    margin-top:6px; background:rgba(201,161,90,.16); color:#F4E3BC; border:1px solid rgba(201,161,90,.4);
+  }
+  .nav-item.plano-link.active{background:var(--gold); color:#3B2233; border-color:var(--gold);}
+
+  .sidebar-toggle{display:none;}
+  .sidebar-overlay{display:none;}
+
+  @media (max-width:900px){
+    .sidebar{
+      position:fixed; left:0; top:0; z-index:80; transform:translateX(-105%);
+      transition:transform .28s ease; box-shadow:0 0 40px rgba(0,0,0,.35);
+    }
+    .sidebar.open{transform:translateX(0);}
+    .sidebar-overlay{
+      display:none; position:fixed; inset:0; background:rgba(59,34,51,.45); z-index:70;
+    }
+    .sidebar-overlay.show{display:block;}
+  }
+
+  /* MOBILE TOPBAR */
+  .mobile-topbar{
+    display:none; align-items:center; justify-content:space-between;
+    padding:14px 18px; background:var(--card); border-bottom:1px solid var(--line);
+    position:sticky; top:0; z-index:60;
+  }
+  .mobile-topbar .brand{font-family:'Fraunces',serif; font-weight:600;}
+  .hamburger{
+    width:38px; height:38px; border-radius:10px; border:1px solid var(--line); background:#fff;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .hamburger span{display:block; width:16px; height:2px; background:var(--plum); position:relative;}
+  .hamburger span::before, .hamburger span::after{
+    content:""; position:absolute; left:0; width:16px; height:2px; background:var(--plum);
+  }
+  .hamburger span::before{top:-5px;} .hamburger span::after{top:5px;}
+  @media (max-width:900px){ .mobile-topbar{display:flex;} }
+
+  /* MAIN */
+  .main-area{flex:1; min-width:0; display:flex; flex-direction:column;}
+  main#viewport{flex:1; padding:56px 32px 40px;}
+  @media (max-width:900px){ main#viewport{padding:36px 18px 30px;} }
+  .view{display:none;}
+  .view.active{display:block; animation:fadein .35s ease;}
+  @keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+
+  /* STEP HEADER */
+  .step-eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; font-weight:800;
+    color:#fff; padding:6px 14px; border-radius:999px; margin-bottom:16px;
+  }
+
+  /* FLOWER / RODA */
+  .flower-card{
+    background:var(--card); border:1px solid var(--line); border-radius:22px; padding:20px;
+    box-shadow:var(--shadow); max-width:420px; margin:0 auto;
+  }
+  .flower-caption{text-align:center; font-size:.82rem; color:var(--plum-soft); margin-top:6px;}
+  #wheelSvg{width:100%; height:auto; display:block;}
+  .petal{transition:d .5s cubic-bezier(.4,0,.2,1), fill .3s ease;}
+  .petal-dot{transition:cx .5s ease, cy .5s ease;}
+
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:18px;
+    padding:28px 30px; box-shadow:var(--shadow);
+  }
+  .present-block{margin-bottom:30px;}
+  .present-block h3{font-size:1.15rem; color:var(--wine);}
+  .present-block h3 .n{
+    display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%;
+    background:var(--rose); color:#fff; font-size:.75rem; font-family:'Manrope'; margin-right:10px; font-weight:800;
+  }
+
+  .intro-cta{
+    margin-top:36px; display:flex; justify-content:center;
+  }
+
+  /* SLIDERS */
+  .dims-form{display:flex; flex-direction:column; gap:22px;}
+  .dim-row{display:grid; grid-template-columns:190px 1fr 46px; align-items:center; gap:16px;}
+  @media (max-width:640px){ .dim-row{grid-template-columns:1fr; gap:8px;} }
+  .dim-label{font-weight:700; font-size:.95rem; display:flex; align-items:center; gap:8px;}
+  .dim-swatch{width:11px; height:11px; border-radius:50%; flex:0 0 auto;}
+  .dim-row input[type=range]{-webkit-appearance:none; width:100%; height:6px; border-radius:4px; background:var(--line); outline:none;}
+  .dim-row input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:20px; height:20px; border-radius:50%; background:var(--wine);
+    border:3px solid #fff; box-shadow:0 2px 6px rgba(0,0,0,.25); cursor:pointer;
+  }
+  .dim-row input[type=range]::-moz-range-thumb{
+    width:20px; height:20px; border-radius:50%; background:var(--wine); border:3px solid #fff;
+    box-shadow:0 2px 6px rgba(0,0,0,.25); cursor:pointer;
+  }
+  .dim-score{font-family:'Fraunces',serif; font-weight:600; font-size:1.15rem; text-align:center; color:var(--wine);}
+
+  .result-strip{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:32px;}
+  @media (max-width:640px){ .result-strip{grid-template-columns:1fr;} }
+  .result-strip .stat{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px 20px;}
+  .result-strip .stat .label{font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--plum-soft); font-weight:700;}
+  .result-strip .stat .value{font-family:'Fraunces',serif; font-size:1.25rem; margin-top:4px;}
+
+  .interpret-text{margin-top:26px;}
+  .interpret-text p{color:var(--plum-soft);}
+  .interpret-text strong{color:var(--plum);}
+
+  /* CHAPTER VIEW */
+  .chapter-intro{display:grid; grid-template-columns:1fr 1fr; gap:26px; margin:30px 0 40px;}
+  @media (max-width:760px){ .chapter-intro{grid-template-columns:1fr;} }
+  .info-box{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px 24px;}
+  .info-box h4{font-size:.95rem; margin-bottom:10px;}
+  .info-box ul{margin:0; padding-left:20px; color:var(--plum-soft);}
+  .info-box li{margin-bottom:6px; font-size:.94rem;}
+
+  .exercises-title{
+    font-size:.78rem; letter-spacing:.12em; text-transform:uppercase; font-weight:800; color:var(--plum-soft);
+    margin:8px 0 18px;
+  }
+  details.exercise{background:var(--card); border:1px solid var(--line); border-radius:14px; margin-bottom:14px; overflow:hidden;}
+  details.exercise summary{
+    list-style:none; cursor:pointer; padding:18px 22px; display:flex; align-items:center; justify-content:space-between;
+    gap:14px; font-family:'Fraunces',serif; font-weight:600; font-size:1.02rem;
+  }
+  details.exercise summary::-webkit-details-marker{display:none;}
+  details.exercise summary .ex-num{font-family:'Manrope'; font-size:.72rem; font-weight:800; color:var(--rose-deep); margin-right:10px;}
+  details.exercise summary .chev{
+    flex:0 0 auto; width:26px; height:26px; border-radius:50%; border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; transition:transform .25s ease; font-size:.8rem; color:var(--plum-soft);
+  }
+  details.exercise[open] summary .chev{transform:rotate(45deg);}
+  .exercise-body{padding:0 22px 24px; color:var(--plum-soft);}
+  .exercise-body p{margin-bottom:.9em;}
+  .exercise-body strong{color:var(--plum);}
+
+  /* STEP NAV (prev/next) */
+  .step-nav{display:flex; justify-content:space-between; gap:14px; margin-top:44px; flex-wrap:wrap;}
+  .step-nav-btn{
+    flex:1 1 220px; display:flex; flex-direction:column; gap:2px; text-align:left;
+    background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 18px;
+    cursor:pointer; text-decoration:none; color:var(--plum); transition:border-color .18s ease, transform .15s ease;
+  }
+  .step-nav-btn:hover{border-color:var(--rose); transform:translateY(-1px);}
+  .step-nav-btn.next{text-align:right; align-items:flex-end; margin-left:auto;}
+  .step-nav-btn .lbl{font-size:.68rem; text-transform:uppercase; letter-spacing:.1em; color:var(--plum-soft); font-weight:700;}
+  .step-nav-btn .title{font-family:'Fraunces',serif; font-weight:600;}
+
+  /* PLAN */
+  .plan-select{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px;}
+  @media (max-width:760px){ .plan-select{grid-template-columns:repeat(2,1fr);} }
+  .plan-chip{
+    border:1.5px solid var(--line); background:var(--card); border-radius:14px; padding:14px 12px; text-align:center;
+    cursor:pointer; font-size:.85rem; font-weight:700; transition:all .18s ease; user-select:none;
+  }
+  .plan-chip .dot{width:9px; height:9px; border-radius:50%; margin:0 auto 8px;}
+  .plan-chip.selected{border-color:var(--wine); background:#FBEFEE; box-shadow:0 4px 14px -6px rgba(122,41,66,.35);}
+  .plan-chip.disabled{opacity:.35; cursor:not-allowed;}
+  .plan-note{font-size:.82rem; color:var(--plum-soft); margin-bottom:24px;}
+  .plan-cards{display:flex; flex-direction:column; gap:18px;}
+  .plan-card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px 24px;}
+  .plan-card-head{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+  .plan-card h4{font-size:1.02rem; display:flex; align-items:center; gap:8px; margin:0;}
+  .clear-link{
+    background:none; border:none; color:var(--wine); font-size:.76rem; font-weight:700; cursor:pointer;
+    text-decoration:underline; padding:4px;
+  }
+  .plan-card label{
+    display:block; font-size:.76rem; text-transform:uppercase; letter-spacing:.07em; font-weight:800;
+    color:var(--plum-soft); margin:14px 0 6px;
+  }
+  .plan-card input[type=text], .plan-card textarea{
+    width:100%; border:1px solid var(--line); border-radius:10px; padding:10px 12px;
+    font-family:'Manrope'; font-size:.94rem; color:var(--plum); background:#fff;
+  }
+  .plan-card textarea{min-height:64px; resize:vertical;}
+  .plan-empty{color:var(--plum-soft); font-size:.92rem; padding:8px 2px;}
+  .plan-actions{margin-top:30px; display:flex; gap:12px; flex-wrap:wrap;}
+  .btn{
+    font-weight:700; font-size:.88rem; border:none; cursor:pointer; padding:13px 22px; border-radius:999px;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn-primary{background:var(--wine); color:#fff;}
+  .btn-primary:hover{transform:translateY(-1px); box-shadow:0 8px 18px -8px rgba(122,41,66,.55);}
+  .btn-ghost{background:transparent; color:var(--wine); border:1.5px solid var(--wine);}
+  .save-note{font-size:.78rem; color:var(--sage); margin-top:14px; display:flex; align-items:center; gap:6px; min-height:18px;}
+
+  footer.app-footer{
+    padding:26px 32px 30px; text-align:center; color:var(--plum-soft); font-size:.78rem;
+    border-top:1px solid var(--line); background:var(--bg-soft);
+  }
+  footer.app-footer .brand-line{font-family:'Fraunces',serif; color:var(--plum); font-size:.95rem; margin-bottom:4px;}
+
+  @media print{
+    .sidebar, .mobile-topbar, .step-nav, footer.app-footer{display:none !important;}
+    .view{display:none !important;}
+    .view#view-plano{display:block !important;}
+    main#viewport{padding:0;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .petal, .petal-dot{transition:none;}
+    .view.active{animation:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">Roda do Autocuidado<br>Feminino</div>
+    <div class="sidebar-brand sub">Material terapêutico</div>
+    <div class="sidebar-divider"></div>
+    <button class="nav-item" data-view="intro" onclick="goTo('intro')">
+      <span class="num">•</span> Introdução
+    </button>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-group-label">Etapas</div>
+    <div id="sidebarEtapas"></div>
+    <div class="sidebar-divider"></div>
+    <button class="nav-item plano-link" data-view="plano" onclick="goTo('plano')">
+      <span class="num">✓</span> Plano de Ação
+    </button>
+  </aside>
+
+  <div class="main-area">
+    <div class="mobile-topbar">
+      <span class="brand">Roda do Autocuidado</span>
+      <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menu"><span></span></button>
+    </div>
+
+    <main id="viewport">
+
+      <!-- ===== VIEW: INTRODUÇÃO ===== -->
+      <section class="view active" id="view-intro">
+        <div class="wrap-wide">
+          <span class="eyebrow">Material terapêutico interativo</span>
+          <h1 style="font-size:clamp(1.9rem,4vw,2.7rem); max-width:16ch;">Roda do Autocuidado Feminino</h1>
+          <p style="font-size:1.05rem; color:var(--plum-soft); max-width:62ch; margin-top:14px;">Existe um tipo de cansaço que não passa com uma noite de sono. É o cansaço de quem cuida de tudo e de todos, menos de si mesma. Esta ferramenta dá forma visível a esse desequilíbrio, para que ele possa, enfim, ser trabalhado em terapia.</p>
+        </div>
+
+        <div class="wrap" style="margin-top:40px;">
+          <div class="present-block">
+            <h3><span class="n">1</span>O que é autocuidado</h3>
+            <p>Autocuidado não é sinônimo de spa, skincare ou dia de folga. Autocuidado é a prática consciente e contínua de reconhecer as próprias necessidades físicas, emocionais, sociais e espirituais, e agir para supri-las. É um compromisso interno de tratar a si mesma com o mesmo cuidado que se oferece às pessoas amadas.</p>
+          </div>
+          <div class="present-block">
+            <h3><span class="n">2</span>Por que o equilíbrio entre as áreas da vida importa</h3>
+            <p>Nenhuma mulher é uma única dimensão. Ela é corpo, emoção, vínculos, propósito, finanças, criatividade, espaço e fé, tudo simultaneamente. Quando uma dessas áreas é sistematicamente negligenciada, o desequilíbrio raramente fica contido ali. Ele vaza para as outras esferas: a exaustão física drena a paciência emocional, a desorganização financeira contamina o sono, o isolamento social esvazia o sentido do trabalho. Avaliar a vida em partes permite enxergar com clareza onde intervir primeiro, em vez de tentar consertar tudo ao mesmo tempo, o que costuma gerar ainda mais sobrecarga.</p>
+          </div>
+          <div class="present-block">
+            <h3><span class="n">3</span>Como utilizar esta ferramenta</h3>
+            <p>Na Etapa 01, você irá atribuir uma nota de 0 a 10 para cada uma das oito dimensões da vida, representando o nível de satisfação atual em cada uma delas. Não existe nota certa ou errada. A orientação da terapeuta aqui é essencial: responda a partir da sensação presente, sem racionalizar demais, sem comparar com outras pessoas e sem julgar a própria nota. O objetivo não é performar equilíbrio, é revelar a verdade de onde você está agora.</p>
+          </div>
+          <div class="present-block">
+            <h3><span class="n">4</span>Como interpretar os resultados</h3>
+            <p>A roda formada pelas oito notas vai desenhar visualmente o mapa atual da sua vida. As áreas com notas mais baixas indicam onde a atenção terapêutica deve se concentrar nas próximas etapas, enquanto as áreas com notas mais altas são recursos e forças que podem ser mobilizados durante o processo. Para cada uma das oito dimensões, você encontrará conteúdo psicoeducativo e cinco exercícios terapêuticos exclusivos, e ao final, um plano de ação para os próximos passos.</p>
+          </div>
+
+          <div class="intro-cta">
+            <button class="btn btn-primary" onclick="goTo('etapa-roda')">Começar avaliação</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== VIEW: ETAPA 01 - RODA ===== -->
+      <section class="view" id="view-etapa-roda">
+        <div class="wrap-wide">
+          <span class="step-eyebrow" style="background:var(--wine);">Etapa 01 de 09</span>
+          <h2>Avalie cada dimensão da sua vida</h2>
+          <p style="color:var(--plum-soft); max-width:60ch;">Para cada área abaixo, atribua uma nota de 0 a 10 que represente seu nível de satisfação atual. Responda com honestidade, sem julgamento.</p>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:start; margin-top:32px;">
+            <div class="flower-card">
+              <svg id="wheelSvg" viewBox="0 0 360 360"></svg>
+              <div class="flower-caption">A roda se molda conforme as notas são preenchidas</div>
+            </div>
+            <div class="card">
+              <div class="dims-form" id="dimsForm"></div>
+            </div>
+          </div>
+
+          <div class="result-strip">
+            <div class="stat"><div class="label">Média geral</div><div class="value" id="statAvg">0.0</div></div>
+            <div class="stat"><div class="label">Área mais fortalecida</div><div class="value" id="statHigh">-</div></div>
+            <div class="stat"><div class="label">Área que pede atenção</div><div class="value" id="statLow">-</div></div>
+          </div>
+
+          <div class="card interpret-text">
+            <h3 style="font-size:1.1rem; color:var(--wine);">O que a sua roda está te mostrando</h3>
+            <p>Olhe para a forma que sua roda desenhou. Ela não é um veredito, é um retrato. Nenhuma mulher tem todas as áreas da vida em dez, e isso não é falha, é condição humana. O valor desta ferramenta não está em alcançar uma roda perfeitamente redonda, mas em enxergar com honestidade onde você está pisando com firmeza e onde você está pisando em falso.</p>
+            <p><strong>As áreas com notas mais baixas</strong> são as que mais estão pedindo cuidado agora. Elas costumam ser as áreas silenciadas, aquelas que ficaram para depois enquanto você resolvia tudo o que parecia mais urgente. Não são as áreas onde você falhou, são as áreas onde você mais precisa de apoio, estrutura e intenção nas próximas semanas.</p>
+            <p><strong>As áreas com notas mais altas</strong> também merecem atenção, porque elas revelam os recursos internos que você já sabe mobilizar. Essas forças podem, e devem, ser usadas como base de apoio para fortalecer as áreas mais frágeis.</p>
+            <p><strong>Um convite, não uma cobrança.</strong> Se a sua roda revelou desequilíbrios importantes, respire. Ela não está dizendo que você fracassou em cuidar de si. Está dizendo que chegou a hora de recomeçar essa prática de um jeito mais consciente, mais gentil e mais sustentável. Nas próximas etapas, cada dimensão da sua vida vai ser acolhida com profundidade, com caminhos práticos e possíveis para fortalecer exatamente aquilo que mais precisa da sua atenção agora.</p>
+          </div>
+
+          <div class="step-nav">
+            <a class="step-nav-btn" onclick="goTo('intro')"><span class="lbl">Voltar</span><span class="title">Introdução</span></a>
+            <a class="step-nav-btn next" id="rodaNextBtn"><span class="lbl">Próxima etapa</span><span class="title">Saúde Física</span></a>
+          </div>
+        </div>
+      </section>
+
+      <!-- capítulos e plano injetados via JS -->
+      <div id="chaptersContainer"></div>
+
+      <section class="view" id="view-plano">
+        <div class="wrap-wide">
+          <span class="step-eyebrow" style="background:var(--gold); color:#3B2233;">Plano de ação</span>
+          <h2>Meu plano de autocuidado</h2>
+          <p style="color:var(--plum-soft); max-width:60ch;">Escolha até três dimensões prioritárias para os próximos passos. Para cada uma, defina uma pequena meta e um compromisso concreto de autocuidado.</p>
+
+          <div class="card" style="margin-top:28px;">
+            <div class="plan-select" id="planSelect"></div>
+            <div class="plan-note" id="planNote">Selecione de 1 a 3 áreas prioritárias.</div>
+            <div class="plan-cards" id="planCards"></div>
+            <div class="plan-actions">
+              <button class="btn btn-primary" onclick="window.print()">Imprimir / salvar plano</button>
+              <button class="btn btn-ghost" id="resetBtn">Apagar todos os dados e recomeçar</button>
+            </div>
+            <div class="save-note" id="saveNote"></div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="app-footer">
+      <div class="brand-line">Roda do Autocuidado Feminino</div>
+      <div>Material terapêutico interativo desenvolvido por Geize Lima. Todos os direitos reservados.</div>
+      <div>Geize Lima Treinamentos Online e Editora &middot; CNPJ 22.698.445/0001-20</div>
+    </footer>
+  </div>
+</div>
+
+<script>
+/* ============ DADOS DAS DIMENSÕES ============ */
+const DIMENSOES = [
+  {
+    id:"fisica", nome:"Saúde Física", cor:"#C97A93",
+    intro:"O corpo é o primeiro território de toda mulher, e é também o primeiro a ser negligenciado quando a vida exige demais. Muitas clientes chegam à terapia competentes em cuidar de todos, exceto de si mesmas fisicamente: dormem mal, comem no automático, ignoram dores e sinais, e tratam o cansaço como algo a ser vencido pela força de vontade, não como uma mensagem a ser escutada.",
+    sinais:["Fadiga persistente que o sono não resolve","Dores tensionais recorrentes (cabeça, pescoço, costas)","Alimentação no piloto automático, sem prazer nem atenção","Sedentarismo justificado pela falta de tempo","Ignorar sintomas físicos até que se tornem urgentes"],
+    maleficios:["Exaustão que compromete a regulação emocional","Irritabilidade e baixa tolerância à frustração","Somatização: o corpo passa a falar o que a mente cala","Queda na autoestima e na relação com a própria imagem"],
+    beneficios:["Mais energia disponível para lidar com a vida","Maior estabilidade de humor e regulação emocional","Sensação de domínio e cuidado sobre o próprio corpo","Sono mais reparador e disposição física real"],
+    exercicios:[
+      {nome:"Escuta Corporal Guiada", corpo:"Objetivo: reconectar a cliente com sensações físicas que costumam ser ignoradas no dia a dia. Conduza um body scan de aproximadamente 10 minutos: peça que a cliente feche os olhos, sentada ou deitada, e guie a atenção progressivamente da cabeça aos pés, nomeando cada região do corpo em voz calma e pausada. Em cada parte, pergunte internamente ('o que este lugar do corpo está sentindo agora?') sem tentar mudar nada, apenas observando. Ao final, peça que ela abra os olhos e verbalize em voz alta três sensações que notou e que normalmente passam despercebidas. Anote essas sensações, pois elas costumam indicar áreas de tensão crônica que merecem acompanhamento nas próximas sessões. Encerre perguntando: 'o que seu corpo estava tentando te dizer?'"},
+      {nome:"Diário do Corpo Silenciado", corpo:"Objetivo: trazer consciência sobre sinais físicos que a cliente aprendeu a ignorar por hábito ou sobrecarga. Entregue uma folha dividida em três colunas: 'sinal físico', 'quando apareceu' e 'o que eu fiz (ou deixei de fazer)'. Peça que, ao longo da próxima semana, ela registre pelo menos cinco momentos em que o corpo emitiu um sinal (cansaço, dor, tensão, fome, sede) e como ela respondeu a esse sinal. Na sessão seguinte, revise o diário junto com a cliente e identifique padrões: ela costuma ignorar, adiar ou minimizar os próprios sinais? A partir desse padrão, construa com ela uma frase de compromisso pessoal, como 'quando meu corpo fala, eu escuto antes de continuar'."},
+      {nome:"Contrato de Movimento Possível", corpo:"Objetivo: substituir a lógica do 'tudo ou nada' em relação ao movimento físico por um compromisso realista e sustentável. Pergunte à cliente qual tipo de movimento já trouxe prazer no passado (caminhada, dança, alongamento, esporte) e evite sugestões genéricas de 'academia' se isso não ressoa com ela. Construa junto um contrato simples e por escrito: tipo de movimento, frequência semanal realista (comece com o mínimo possível, mesmo que sejam 10 minutos, 2 vezes por semana) e um lembrete visual que ela possa manter à vista. Reforce que o objetivo inicial não é performance, é reconstruir a confiança de que ela consegue cumprir promessas feitas a si mesma. Revise o contrato na sessão seguinte e ajuste conforme necessário."},
+      {nome:"Ritual do Sono Sagrado", corpo:"Objetivo: resgatar o sono como território de cuidado, não apenas como função biológica negligenciada. Investigue com a cliente sua rotina atual antes de dormir (telas, horários, preocupações levadas para a cama). Construa junto um pequeno ritual de transição de 15 a 20 minutos antes de deitar, composto por 2 ou 3 ações simbólicas de encerramento do dia (por exemplo: escrever três frases sobre o dia, um alongamento leve, uma bebida quente sem cafeína, luz mais baixa). Enfatize que ritual não é regra rígida, é um convite de gentileza consigo mesma. Peça que ela experimente por uma semana e traga para a sessão seguinte o que percebeu sobre a qualidade do sono e do momento de deitar."},
+      {nome:"Carta ao Corpo", corpo:"Objetivo: elaborar, por escrito, a relação da cliente com o próprio corpo, incluindo eventuais ressentimentos, cobranças e desconexões. Peça que ela escreva uma carta endereçada ao próprio corpo, como se ele fosse uma pessoa que a acompanhou a vida inteira. Oriente que a carta pode incluir agradecimentos, pedidos de desculpa por exigências excessivas, e também o que ela gostaria de oferecer a esse corpo daqui para frente. Não corrija ou direcione o conteúdo, apenas acolha o que emergir. Na sessão seguinte, convide-a a ler a carta em voz alta (se sentir-se confortável) e explore os sentimentos que surgiram durante a escrita e durante a leitura."}
+    ]
+  },
+  {
+    id:"emocional", nome:"Saúde Emocional", cor:"#7A2942",
+    intro:"A saúde emocional é a capacidade de reconhecer, nomear e regular aquilo que se sente, sem reprimir nem ser dominada pelas emoções. Muitas mulheres foram socializadas para segurar sentimentos em nome da harmonia alheia, e chegam à terapia com um vocabulário emocional empobrecido, alternando entre o controle excessivo e explosões que parecem desproporcionais.",
+    sinais:["Dificuldade em nomear o que sente além de 'bem' ou 'mal'","Explosões de raiva ou choro aparentemente sem gatilho claro","Embotamento emocional, sensação de estar 'no automático'","Evitar sentir para não precisar lidar com o que aparece","Sentir-se culpada por ter sentimentos considerados 'negativos'"],
+    maleficios:["Burnout emocional e sensação crônica de sobrecarga interna","Relações desgastadas por comunicação emocional indireta","Somatização de emoções não processadas","Sensação de estranhamento com a própria vida interior"],
+    beneficios:["Clareza sobre o que sente e por quê","Maior capacidade de se expressar sem explodir ou se anular","Resiliência emocional diante de situações difíceis","Relações mais autênticas, com menos ressentimento acumulado"],
+    exercicios:[
+      {nome:"Mapa das Emoções da Semana", corpo:"Objetivo: ampliar o vocabulário emocional e identificar padrões ao longo do tempo. Entregue à cliente uma roda de emoções (ou desenhe uma simples com 8 a 10 categorias: alegria, raiva, tristeza, medo, nojo, surpresa, culpa, vergonha, calma, esperança). Peça que, todos os dias durante uma semana, ela marque a emoção predominante do dia e escreva uma frase curta sobre o contexto. Na sessão seguinte, observem juntas os padrões: há emoções que se repetem? Há dias da semana ou contextos específicos associados a determinadas emoções? Use o mapa como ponto de partida para aprofundar os temas emocionais recorrentes."},
+      {nome:"A Cadeira Vazia do Sentimento Não Dito", corpo:"Objetivo: dar voz a um sentimento ou a uma comunicação que ficou represada com alguém importante. Utilizando a técnica da cadeira vazia, posicione uma cadeira à frente da cliente representando a pessoa (ou situação) para quem ela nunca conseguiu dizer o que sentia. Convide-a a falar diretamente, em primeira pessoa e no presente, tudo o que gostaria de ter dito, sem filtros de educação ou racionalização. Observe a linguagem corporal e as pausas. Ao final, pergunte como foi para ela dizer isso em voz alta, e o que muda ao ouvir essas palavras saindo de si mesma. Processe com cuidado o que emergir, sem pressa de fechar o exercício."},
+      {nome:"Termômetro Emocional Diário", corpo:"Objetivo: desenvolver a habilidade de monitorar a intensidade emocional antes que ela se torne ingerenciável. Ensine a cliente a usar uma escala de 0 a 10 para medir a intensidade de emoções fortes ao longo do dia, registrando o número, a emoção e o gatilho identificado. Explique que o objetivo não é evitar picos emocionais, mas reconhecê-los mais cedo, quando ainda estão em 4 ou 5, e não apenas quando já chegaram a 9 ou 10. Combine com ela uma ação de autorregulação específica para quando o termômetro atingir determinado nível (respiração, pausa, água, mudança de ambiente). Revise o termômetro semanalmente nas sessões."},
+      {nome:"Carta para a Raiva Engolida", corpo:"Objetivo: acessar e validar episódios de raiva que foram reprimidos por crenças sobre 'mulher não deve se exaltar'. Peça que a cliente escolha uma situação recente em que sentiu raiva mas não se permitiu expressá-la. Oriente que escreva uma carta não endereçada para envio, apenas para elaboração, deixando a raiva existir sem censura na escrita. Explore, na sessão, quais crenças aprendidas ao longo da vida (familiares, culturais, religiosas) tornam difícil para ela expressar raiva. Trabalhe a diferenciação entre sentir raiva, que é legítimo, e agir de forma agressiva, que é uma escolha, ajudando-a a encontrar formas assertivas de expressão futura."},
+      {nome:"Ancoragem em 3 Passos", corpo:"Objetivo: oferecer uma ferramenta rápida de regulação emocional para momentos de intensidade fora do consultório. Ensine a técnica de ancoragem: 1) Nomear: identificar em voz alta ou mentalmente a emoção sentida ('estou sentindo ansiedade'); 2) Localizar: perceber onde no corpo essa emoção se manifesta fisicamente; 3) Respirar: realizar 4 respirações lentas e profundas focando apenas na sensação de entrada e saída do ar. Pratique o exercício junto com a cliente na sessão, simulando uma situação de gatilho leve, para que ela sinta o efeito ainda no consultório. Oriente que use a técnica sempre que perceber uma emoção subindo de intensidade ao longo da semana, e traga relatos de uso para a próxima sessão."}
+    ]
+  },
+  {
+    id:"espiritual", nome:"Espiritualidade", cor:"#C9A15A",
+    intro:"Espiritualidade, aqui, não se limita a uma prática religiosa específica: é o senso de conexão com algo maior que a rotina imediata, seja fé, propósito, valores ou vínculos significativos. Quando essa dimensão é negligenciada, a mulher costuma relatar uma sensação difusa de vazio, mesmo quando tudo, na superfície, parece estar em ordem.",
+    sinais:["Sensação de vazio existencial mesmo com a vida 'funcionando'","Desconexão da própria fé ou de práticas que antes traziam sentido","Rotina automática, sem espaço para reflexão ou silêncio","Sentir-se distante dos valores que dizia priorizar"],
+    maleficios:["Crise de sentido e desmotivação generalizada","Maior vulnerabilidade emocional diante de perdas e crises","Sensação de estar 'vivendo a vida de outra pessoa'","Dificuldade em tomar decisões alinhadas com o que realmente importa"],
+    beneficios:["Sensação de propósito e direção na vida","Maior paz interior diante da incerteza","Resiliência espiritual em momentos de crise","Decisões mais alinhadas com valores pessoais profundos"],
+    exercicios:[
+      {nome:"Inventário de Valores Essenciais", corpo:"Objetivo: identificar os valores centrais que orientam a vida da cliente, muitas vezes esquecidos em meio à rotina. Apresente uma lista de 15 a 20 valores (família, fé, liberdade, criatividade, segurança, contribuição, entre outros) e peça que ela escolha os cinco mais importantes para si atualmente. Em seguida, pergunte, para cada valor escolhido, em uma escala de 0 a 10, o quanto sua vida atual reflete esse valor na prática. Explore as maiores discrepâncias entre valor declarado e vivência real, pois é ali que costuma estar o maior sofrimento existencial. Finalize construindo com ela uma pequena ação concreta para aproximar a vida real de um dos valores mais distantes."},
+      {nome:"Ritual de Silêncio Diário", corpo:"Objetivo: reintroduzir momentos de pausa e conexão interior na rotina da cliente. Negocie com ela um compromisso realista de 5 a 10 minutos diários de silêncio intencional, seja em oração, meditação, contemplação ou simplesmente sentada sem estímulos externos (sem celular, sem tarefas). Explique que o objetivo não é 'esvaziar a mente' de forma perfeita, mas criar um espaço regular de escuta interna. Oriente que, se pensamentos ou preocupações surgirem, ela apenas os observe sem julgamento e retorne à respiração. Peça um breve relato semanal na sessão sobre como foi sustentar esse espaço e o que emergiu nele."},
+      {nome:"Carta ao Meu Propósito", corpo:"Objetivo: reconectar a cliente com um senso de direção e significado pessoal. Peça que ela escreva uma carta dirigida ao seu próprio propósito de vida, como se ele fosse uma entidade com quem pudesse dialogar: o que ela sente que está deixando de honrar, o que gostaria de perguntar, o que teme, o que deseja. Não é necessário que ela tenha um propósito claramente definido para realizar o exercício, a escrita em si é parte do processo de clarificação. Na sessão, explore o conteúdo da carta com perguntas abertas, sem tentar 'resolver' ou definir um propósito fechado, respeitando o tempo de elaboração de cada cliente."},
+      {nome:"Gratidão em Camadas", corpo:"Objetivo: fortalecer a conexão com aspectos significativos da vida através da prática estruturada de gratidão. Oriente a cliente a registrar, diariamente por uma semana, três motivos de gratidão organizados em camadas diferentes: um relacionado ao corpo ou à saúde, um relacionado a vínculos ou pessoas, e um relacionado a algo maior (fé, natureza, propósito, sentido). Explique que a repetição de categorias é permitida, o importante é a regularidade da prática. Na sessão seguinte, revise os registros e explore como essa prática afetou o humor e a percepção geral da semana, ajustando as categorias conforme o que for mais significativo para aquela cliente."},
+      {nome:"Mapa de Crenças que Sustentam", corpo:"Objetivo: identificar crenças espirituais ou existenciais que servem como base de resiliência para a cliente. Peça que ela liste de três a cinco crenças ou frases que já a sustentaram em momentos difíceis no passado (podem ser religiosas, filosóficas ou pessoais). Para cada uma, explore de onde vem essa crença, quando ela apareceu pela primeira vez na vida da cliente, e se ainda está acessível hoje ou foi enfraquecida por algum evento recente. Construa junto com ela uma forma física de manter essas crenças visíveis no dia a dia (um cartão, uma anotação no celular, um objeto simbólico), para que possam ser acessadas rapidamente em momentos de dificuldade."}
+    ]
+  },
+  {
+    id:"relacionamentos", nome:"Relacionamentos", cor:"#8E5A73",
+    intro:"Os relacionamentos são um dos maiores preditores de bem-estar emocional, e também uma das áreas mais silenciosamente negligenciadas por mulheres que assumem o papel de cuidadoras de todos ao redor. É comum encontrar clientes cercadas de pessoas e, ainda assim, profundamente sozinhas, porque nunca aprenderam a pedir apoio para si mesmas.",
+    sinais:["Sensação de solidão mesmo rodeada de pessoas","Dificuldade em pedir ajuda ou demonstrar vulnerabilidade","Relações desgastadas por excesso de doação e pouca reciprocidade","Isolamento progressivo por falta de tempo ou energia"],
+    maleficios:["Ressentimento acumulado por relações desequilibradas","Solidão crônica, mesmo em meio a vínculos existentes","Sobrecarga emocional por sustentar sozinha múltiplas relações","Dificuldade de confiar e se apoiar em momentos de crise"],
+    beneficios:["Sensação de pertencimento e apoio mútuo","Relações mais recíprocas e sustentáveis a longo prazo","Maior capacidade de pedir e receber ajuda sem culpa","Rede de apoio ativa disponível em momentos difíceis"],
+    exercicios:[
+      {nome:"Mapa da Rede de Apoio", corpo:"Objetivo: visualizar a rede de relacionamentos atual da cliente e identificar lacunas de apoio. Peça que ela desenhe círculos concêntricos com o próprio nome no centro, distribuindo pessoas importantes da vida conforme a proximidade emocional real (não a proximidade formal). Em seguida, para cada pessoa, pergunte: 'esta pessoa sabe quando eu preciso de ajuda?' e 'eu já pedi ajuda a ela alguma vez?'. Identifiquem juntas se existem pessoas próximas no papel mas distantes na prática, e se há excesso de doação unilateral em algumas relações. Finalize elegendo uma pessoa do mapa para um pequeno movimento de aproximação nas próximas semanas."},
+      {nome:"Ensaio do Pedido de Ajuda", corpo:"Objetivo: praticar, em ambiente seguro, a habilidade de pedir ajuda de forma direta. Peça que a cliente identifique uma situação real e atual em que precisa de apoio, mas ainda não pediu. Utilizando role-play, você assume o papel da pessoa a quem o pedido seria feito, e a cliente pratica verbalizar o pedido de forma clara e direta, sem se desculpar excessivamente ou minimizar a própria necessidade. Repita o ensaio ajustando tom e palavras até que ela sinta mais segurança. Explore, durante o processo, quais medos surgem ao pedir ajuda (ser recusada, parecer fraca, incomodar) e desconstrua-os com base em experiências reais dela."},
+      {nome:"Balanço de Dar e Receber", corpo:"Objetivo: trazer consciência sobre o equilíbrio entre doação e recebimento nas relações mais próximas. Peça que a cliente liste as três relações mais significativas atualmente e, para cada uma, avalie em uma escala de 0 a 10 o quanto ela sente que dá e o quanto sente que recebe. Explore os desequilíbrios encontrados: em quais relações ela está estruturalmente sobrecarregada? Investigue crenças subjacentes que sustentam esse padrão, como 'se eu não fizer, ninguém faz' ou 'pedir é ser um peso'. Finalize com um pequeno experimento comportamental: uma ação concreta de permitir-se receber mais em uma dessas relações na próxima semana."},
+      {nome:"Carta de Limites Não Ditos", corpo:"Objetivo: elaborar, por escrito, limites relacionais que a cliente sente necessidade de estabelecer mas ainda não verbalizou. Peça que ela escolha uma relação em que sente que um limite precisa ser colocado, e escreva uma carta (não necessariamente para envio) descrevendo com clareza o que não é mais aceitável, o que ela precisa que mude, e o que está disposta a fazer diferente a partir de agora. Explore, na sessão, os sentimentos de culpa ou medo que aparecem ao estabelecer limites, validando que colocar limites é um ato de cuidado com a relação, não uma ameaça a ela. Se apropriado, ensaiem juntas uma versão verbal reduzida da carta para uso real."},
+      {nome:"Reconexão Intencional", corpo:"Objetivo: fortalecer um vínculo significativo que perdeu proximidade ao longo do tempo. Peça que a cliente identifique uma pessoa importante com quem o contato esfriou, não por conflito, mas por falta de tempo ou energia. Construa junto um pequeno plano de reconexão: uma mensagem, uma ligação ou um encontro, com um convite específico e não genérico ('queria muito te ver' funciona menos do que 'posso te ligar sábado às 10h para a gente conversar com calma?'). Explore expectativas realistas sobre essa reconexão, sem pressionar por um resultado específico. Traga o relato da experiência para a sessão seguinte, incluindo o que ela sentiu antes, durante e depois do contato."}
+    ]
+  },
+  {
+    id:"profissional", nome:"Vida Profissional", cor:"#6B4E5E",
+    intro:"A vida profissional carrega, para muitas mulheres, uma camada extra de cobrança: além de entregar resultados, é preciso provar competência constantemente, muitas vezes em ambientes que não foram construídos pensando nelas. O esgotamento profissional raramente é só sobre carga de trabalho, é também sobre a energia emocional gasta em validar a própria capacidade.",
+    sinais:["Exaustão que persiste mesmo em períodos de menor demanda","Síndrome da impostora e necessidade constante de provar valor","Sensação de estagnação ou de estar 'no piloto automático' na carreira","Dificuldade em delegar ou dizer não a demandas extras"],
+    maleficios:["Burnout profissional e queda de desempenho a médio prazo","Perda de identidade fora do papel profissional","Insatisfação crônica mesmo em posições de sucesso aparente","Sacrifício sistemático de outras áreas da vida em nome do trabalho"],
+    beneficios:["Maior clareza sobre direção e propósito na carreira","Sensação de reconhecimento genuíno, vindo de dentro","Equilíbrio sustentável entre entrega profissional e descanso","Confiança na própria trajetória, sem dependência de validação externa"],
+    exercicios:[
+      {nome:"Linha do Tempo de Conquistas Esquecidas", corpo:"Objetivo: reconstruir a autoconfiança profissional a partir de evidências concretas da própria trajetória. Peça que a cliente construa uma linha do tempo com pelo menos oito marcos profissionais significativos, incluindo pequenas conquistas que costumam ser minimizadas (um elogio recebido, um problema resolvido sozinha, uma habilidade desenvolvida). Para cada marco, pergunte o que essa conquista revela sobre suas capacidades reais. Este exercício é particularmente potente para clientes com padrões de síndrome da impostora, pois confronta a narrativa interna de incompetência com fatos concretos da própria história."},
+      {nome:"Mapa de Energia no Trabalho", corpo:"Objetivo: identificar quais atividades profissionais energizam e quais esgotam a cliente, para orientar futuras decisões de carreira. Peça que ela liste as principais atividades de uma semana de trabalho típica e classifique cada uma em uma escala de -5 (extremamente esgotante) a +5 (extremamente energizante). Observem juntas os padrões: há um desequilíbrio entre tarefas que drenam e tarefas que nutrem? Existe algum tipo de atividade recorrente que aparece nos dois extremos e merece investigação mais profunda? Use o mapa como base para conversas futuras sobre realocação de tempo ou negociação de responsabilidades."},
+      {nome:"Carta de Demissão da Perfeição", corpo:"Objetivo: trabalhar crenças perfeccionistas que sustentam a sobrecarga profissional. Peça que a cliente escreva uma carta de 'demissão' simbólica, dirigida à própria perfeição, como se estivesse encerrando um contrato de trabalho com ela. Oriente que descreva o que esse padrão perfeccionista custou (tempo, saúde, relações, prazer) e o que ela espera contratar em seu lugar (competência suficiente, entrega consistente, autocuidado). Este exercício costuma gerar insights potentes sobre a diferença entre excelência saudável e perfeccionismo punitivo. Processe com cuidado eventuais resistências, já que o perfeccionismo frequentemente funciona como proteção contra o medo de julgamento."},
+      {nome:"Ensaio de Limites Profissionais", corpo:"Objetivo: praticar a habilidade de recusar demandas profissionais excessivas de forma assertiva. Identifique com a cliente uma situação recorrente em que ela aceita tarefas além da sua capacidade por dificuldade em dizer não. Através de role-play, pratique frases diretas e profissionais de recusa ou negociação de prazo, sem justificativas excessivas ou pedidos de desculpa. Explore os medos associados a estabelecer esses limites no ambiente de trabalho (ser vista como incompetente, perder oportunidades, desagradar). Combine um limite específico e realista para ser testado antes da próxima sessão, e reserve tempo para revisar o resultado dessa experiência."},
+      {nome:"Visão de Carreira em 3 Camadas", corpo:"Objetivo: construir clareza sobre direção profissional em diferentes horizontes de tempo. Peça que a cliente descreva, de forma livre e sem se preocupar em ser realista de início, como imagina sua vida profissional em 1 ano, em 5 anos e em 10 anos. Para cada camada, explore o que precisa começar a acontecer agora para caminhar naquela direção, e quais crenças limitantes surgem ao imaginar esses cenários. Finalize identificando uma ação concreta e pequena que possa ser iniciada nas próximas duas semanas, alinhada com a camada de 1 ano, para que a visão de longo prazo comece a ganhar corpo no presente."}
+    ]
+  },
+  {
+    id:"financeira", nome:"Vida Financeira", cor:"#A8894A",
+    intro:"A relação com o dinheiro carrega histórias familiares, crenças herdadas e, frequentemente, um silêncio construído ao longo de gerações de mulheres que não tiveram autonomia financeira plena. Trabalhar essa dimensão em terapia não significa dar orientação financeira técnica, mas acolher a dimensão emocional e comportamental por trás da relação com o dinheiro.",
+    sinais:["Ansiedade ao pensar ou falar sobre dinheiro","Evitação de olhar extratos, contas ou planejamento financeiro","Sensação de dependência financeira não desejada","Dificuldade em negociar valores próprios (salário, honorários, preços)"],
+    maleficios:["Insônia e ansiedade crônica relacionadas à insegurança financeira","Culpa e vergonha associadas a gastos ou dívidas","Sensação de falta de controle sobre decisões importantes da vida","Perpetuação de padrões financeiros disfuncionais aprendidos na infância"],
+    beneficios:["Sensação de segurança e autonomia sobre o próprio futuro","Redução da ansiedade relacionada a imprevistos financeiros","Maior liberdade para tomar decisões de vida alinhadas aos próprios valores","Ruptura de padrões financeiros herdados que não servem mais"],
+    exercicios:[
+      {nome:"Raio-X da Relação com o Dinheiro", corpo:"Objetivo: mapear emoções e comportamentos associados ao dinheiro no presente. Peça que a cliente descreva, em poucas palavras, o que sente ao pensar em dinheiro (medo, vergonha, indiferença, ansiedade, controle) e observe se ela evita ativamente lidar com finanças no dia a dia. Explore comportamentos concretos: ela olha o extrato bancário regularmente? Sabe, aproximadamente, quanto gasta por mês? Evita conversas sobre valores e preços? Este raio-x não tem função de diagnóstico financeiro técnico, mas de abrir espaço para investigar, nas sessões seguintes, a origem emocional desses padrões."},
+      {nome:"Carta ao Meu Eu Financeiro do Passado", corpo:"Objetivo: elaborar experiências financeiras da infância ou juventude que moldaram crenças atuais sobre dinheiro. Peça que a cliente escreva uma carta dirigida a si mesma em um momento específico do passado relacionado a dinheiro (uma privação, uma vergonha vivida, uma lição aprendida em casa). Oriente que inclua o que gostaria de dizer àquela versão de si mesma com o olhar de hoje. Na sessão, explore como essas experiências passadas ainda influenciam decisões financeiras atuais, e comece a diferenciar entre crenças que foram úteis para sobrevivência no passado, mas que já não servem à vida adulta presente."},
+      {nome:"Mapa de Crenças Financeiras Herdadas", corpo:"Objetivo: identificar frases e crenças sobre dinheiro absorvidas da família de origem. Peça que a cliente liste de cinco a oito frases sobre dinheiro que ouvia repetidamente quando criança ('dinheiro não traz felicidade', 'mulher não precisa entender de finanças', 'sempre vai faltar'). Para cada frase, explore quem a dizia, em que contexto, e se essa crença ainda opera na vida da cliente hoje, mesmo que de forma inconsciente. Construam juntas versões alternativas dessas crenças, mais alinhadas com a autonomia que ela deseja construir, e registre-as para revisão futura."},
+      {nome:"Pequeno Passo de Controle Financeiro", corpo:"Objetivo: reduzir a ansiedade financeira através de uma ação prática e gradual, sem exigir domínio técnico completo. Combine com a cliente um único passo pequeno e específico a ser dado antes da próxima sessão, como revisar o extrato bancário do último mês, anotar os gastos de uma semana, ou ter uma conversa financeira específica com alguém importante. O objetivo não é resolver toda a vida financeira de uma vez, é quebrar o padrão de evitação através de uma ação contida e realizável. Reforce que qualquer desconforto que surgir ao dar esse passo é informação valiosa para a terapia, não um sinal de fracasso."},
+      {nome:"Visualização da Segurança Financeira", corpo:"Objetivo: trabalhar a diferença entre segurança financeira real e ansiedade financeira desproporcional ao contexto atual. Conduza um exercício breve de visualização guiada, pedindo que a cliente imagine, com detalhes sensoriais, como seria um dia comum de sua vida caso se sentisse plenamente segura financeiramente: como ela dormiria, como tomaria decisões, como se relacionaria com compras e planejamento. Ao final, explore a distância entre essa visualização e a vivência emocional atual, e identifique se essa distância é proporcional à realidade financeira objetiva ou amplificada por ansiedade e crenças herdadas. Use essa reflexão para orientar objetivos terapêuticos futuros nesta dimensão."}
+    ]
+  },
+  {
+    id:"lazer", nome:"Lazer e Criatividade", cor:"#7C8B6F",
+    intro:"O lazer costuma ser a primeira área sacrificada quando a vida fica cheia, e a última a ser retomada, porque carrega, para muitas mulheres, uma culpa silenciosa: a sensação de que descansar ou criar sem função prática é um luxo que não se pode dar. Recuperar essa dimensão é recuperar o direito ao prazer, não como recompensa por produtividade, mas como necessidade legítima.",
+    sinais:["Culpa ao descansar ou fazer algo apenas por prazer","Ausência quase total de hobbies ou atividades sem função produtiva","Vida organizada exclusivamente em torno de obrigações","Dificuldade em lembrar a última vez que fez algo só por vontade"],
+    maleficios:["Anedonia: perda gradual da capacidade de sentir prazer","Esgotamento por ausência de válvulas de escape saudáveis","Perda de identidade fora dos papéis de cuidado e produtividade","Ressentimento silencioso por uma vida sem espaço para si"],
+    beneficios:["Resgate da capacidade de sentir prazer genuíno","Maior vitalidade e disposição para lidar com o cotidiano","Expressão pessoal e identidade fortalecida para além dos papéis exercidos","Redução do esgotamento através de pausas legítimas e regulares"],
+    exercicios:[
+      {nome:"Resgate das Alegrias Esquecidas", corpo:"Objetivo: reconectar a cliente com fontes de prazer que existiram em outras fases da vida. Peça que ela liste de cinco a dez atividades que já trouxeram alegria genuína em qualquer momento da vida, incluindo a infância e adolescência, mesmo que pareçam distantes da rotina atual. Para cada uma, explore o que especificamente trazia prazer (o processo criativo, o movimento, a companhia, a solidão, a competição). Identifiquem juntas quais dessas fontes de prazer ainda são acessíveis, mesmo que em versão reduzida, e escolham uma para reintroduzir de forma pequena e concreta nas próximas duas semanas."},
+      {nome:"Contrato de Prazer Semanal", corpo:"Objetivo: instituir o lazer como compromisso agendado, não como algo que só acontece se sobrar tempo. Construa com a cliente um contrato simples: uma atividade de prazer, com duração e horário definidos, incluída na agenda da semana como qualquer outro compromisso inegociável. Reforce que a atividade não precisa ser elaborada ou cara, pode ser tão simples quanto vinte minutos de leitura ou um banho demorado sem pressa. Explore resistências que surgirem ao tentar priorizar esse horário (culpa, sensação de estar 'roubando' tempo de outras obrigações) e trabalhe ativamente o direito ao descanso como parte do tratamento."},
+      {nome:"Diário sem Função", corpo:"Objetivo: reconectar a cliente com a criatividade livre de julgamento e de produtividade. Convide-a a manter, durante uma semana, um caderno ou espaço de registro criativo sem nenhuma função ou destino: desenhos, rabiscos, frases soltas, colagens, o que quer que surja, sem preocupação com qualidade ou coerência. Explique que o objetivo explícito é a ausência de objetivo, contrariando o hábito de transformar tudo em produto ou entrega. Na sessão seguinte, explore como foi permitir-se criar sem função, e observe se surgiram resistências relacionadas a autocrítica, perfeccionismo ou sensação de perda de tempo."},
+      {nome:"Desafio dos 15 Minutos Só Meus", corpo:"Objetivo: instaurar um espaço diário mínimo e protegido de tempo individual, sem interrupções ou funções para terceiros. Negocie com a cliente 15 minutos diários, no horário que for mais viável, dedicados exclusivamente a algo que ela escolha, sem que sirva a mais ninguém além dela mesma. Explore, com cuidado, os obstáculos práticos e emocionais para proteger esse tempo (interrupções familiares, culpa, dificuldade em pedir esse espaço). Trate esse pequeno compromisso como uma prática de fortalecimento de limites pessoais, revisando semanalmente na sessão o que sustentou ou impediu o cumprimento do desafio."},
+      {nome:"Carta de Permissão para o Descanso", corpo:"Objetivo: trabalhar diretamente a culpa associada ao descanso e ao prazer. Peça que a cliente escreva uma carta de permissão para si mesma, na qual formalmente se autoriza a descansar, brincar e criar sem que isso precise ser justificado por produtividade ou merecimento prévio. Explore, durante a escrita ou na leitura posterior, quais vozes internas (familiares, culturais, religiosas) reforçam a ideia de que descanso precisa ser conquistado. Trabalhe a diferenciação entre preguiça, que é evitação, e descanso, que é necessidade fisiológica e emocional legítima, ajudando a cliente a internalizar essa permissão de forma mais estável."}
+    ]
+  },
+  {
+    id:"ambiente", nome:"Ambiente e Organização", cor:"#5C6B4F",
+    intro:"O espaço físico em que se vive reflete, e também influencia, o estado emocional interno. Ambientes caóticos costumam gerar sobrecarga mental silenciosa, enquanto espaços organizados, mesmo que simples, funcionam como refúgio e extensão do próprio cuidado. Esta dimensão frequentemente aparece como 'menos importante' à primeira vista, mas carrega grande peso na sensação diária de controle sobre a própria vida.",
+    sinais:["Desorganização crônica que gera desconforto silencioso","Sensação de estar sempre 'apagando incêndios' em casa ou no trabalho","Procrastinação recorrente de tarefas domésticas simples","Ausência de um espaço pessoal que sinta como verdadeiramente seu"],
+    maleficios:["Sobrecarga mental constante por excesso de estímulos visuais desorganizados","Ansiedade ambiental e dificuldade de relaxar mesmo em casa","Sensação de falta de controle que se estende a outras áreas da vida","Desgaste em relações por conflitos ligados à divisão de tarefas domésticas"],
+    beneficios:["Clareza mental favorecida por um ambiente mais organizado","Sensação de controle e competência sobre o próprio espaço","O ambiente passa a funcionar como refúgio, não como fonte de estresse","Redistribuição mais saudável de tarefas domésticas e mentais"],
+    exercicios:[
+      {nome:"Mapa do Caos e da Calma", corpo:"Objetivo: identificar quais espaços físicos pesam emocionalmente e quais funcionam como refúgio. Peça que a cliente liste os principais cômodos ou espaços que habita regularmente (casa, quarto, escritório, carro) e classifique cada um em uma escala de 0 a 10 quanto à sensação de calma que proporciona. Explore os espaços com notas mais baixas: o que especificamente neles gera desconforto (bagunça visual, objetos com significado emocional pesado, falta de função clara)? Escolham juntas um único espaço prioritário para intervenção, evitando a armadilha de tentar organizar tudo de uma vez."},
+      {nome:"Ritual dos 10 Minutos de Ordem", corpo:"Objetivo: quebrar a paralisia gerada por tarefas domésticas que parecem grandes demais para começar. Proponha um compromisso diário de apenas 10 minutos dedicados a organizar uma única área pequena e específica (uma gaveta, uma mesa, um canto), com um timer visível para reforçar que o tempo é limitado e finito. Reforce que o objetivo não é terminar a organização da casa inteira, mas construir a experiência repetida de começar e concluir algo pequeno, reconstruindo a sensação de capacidade e controle. Revise semanalmente os relatos desse ritual, celebrando a consistência mais do que o resultado visual."},
+      {nome:"Carta ao Meu Espaço", corpo:"Objetivo: elaborar a relação emocional da cliente com o próprio ambiente doméstico. Peça que ela escreva uma carta dirigida à sua casa ou ao seu espaço pessoal, descrevendo como se sente ao habitá-lo, o que gostaria que fosse diferente, e o que esse espaço revela sobre o momento de vida atual. Frequentemente, a desorganização do ambiente físico espelha uma sobrecarga emocional mais ampla, e este exercício ajuda a trazer essa conexão à consciência. Explore, na sessão, se a bagunça relatada é recente ou crônica, e o que mudou na vida da cliente quando o padrão começou."},
+      {nome:"Zona Sagrada", corpo:"Objetivo: criar um pequeno espaço físico exclusivamente dedicado ao bem-estar da cliente, dentro da própria casa. Ajude-a a identificar um canto, por menor que seja (uma poltrona, um canto de mesa, um parapeito de janela), que possa ser transformado em um espaço só dela, livre de função doméstica ou familiar. Explore o que tornaria esse espaço acolhedor (uma planta, uma luz específica, um objeto significativo) e combine um pequeno passo concreto para criá-lo antes da próxima sessão. Reforce que ter um espaço fisicamente delimitado como 'seu' fortalece simbolicamente o direito a ter necessidades próprias dentro do lar."},
+      {nome:"Sistema de Delegação Consciente", corpo:"Objetivo: reduzir a sobrecarga mental relacionada à gestão do ambiente doméstico através da distribuição consciente de tarefas. Peça que a cliente liste todas as tarefas domésticas e de organização que atualmente recaem sobre ela, incluindo a carga mental de 'lembrar e coordenar', não apenas a execução física. Explore quais dessas tarefas poderiam ser delegadas, seja para outras pessoas da casa ou para serviços externos, e quais crenças dificultam essa delegação (culpa, perfeccionismo, crença de que 'ninguém faz do jeito certo'). Construa com ela um pequeno plano de delegação de pelo menos uma tarefa específica, com prazo definido para ser colocado em prática."}
+    ]
+  }
+];
+
+const TOTAL_ETAPAS = DIMENSOES.length + 1; // roda + 8 dimensões
+
+/* ============ PERSISTÊNCIA ============ */
+const STORAGE_KEY = "geize_roda_autocuidado_v1";
+const scores = {};
+DIMENSOES.forEach(d => scores[d.id] = 5);
+let selectedAreas = [];
+let planTexts = {};
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    const parsed = JSON.parse(raw);
+    if(parsed.scores){ Object.keys(parsed.scores).forEach(k => { if(k in scores) scores[k] = parsed.scores[k]; }); }
+    if(Array.isArray(parsed.selectedAreas)) selectedAreas = parsed.selectedAreas;
+    if(parsed.planTexts) planTexts = parsed.planTexts;
+  }catch(e){ console.warn("Não foi possível carregar os dados salvos.", e); }
+}
+
+function saveState(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({scores, selectedAreas, planTexts}));
+    flashSaveNote();
+  }catch(e){ console.warn("Não foi possível salvar os dados.", e); }
+}
+
+let saveNoteTimeout;
+function flashSaveNote(){
+  const el = document.getElementById('saveNote');
+  if(!el) return;
+  el.textContent = "Respostas salvas neste navegador.";
+  clearTimeout(saveNoteTimeout);
+  saveNoteTimeout = setTimeout(()=>{ el.textContent = ""; }, 2400);
+}
+
+/* ============ RODA / FLOR SVG ============ */
+const svgNS = "http://www.w3.org/2000/svg";
+const CX = 180, CY = 180, R_MAX = 140, R_MIN = 26;
+const N = DIMENSOES.length;
+
+function polar(cx, cy, r, angleDeg){
+  const a = (angleDeg - 90) * Math.PI / 180;
+  return [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+}
+
+function buildWheel(){
+  const wheelSvg = document.getElementById('wheelSvg');
+  wheelSvg.innerHTML = "";
+  for(let ring=1; ring<=4; ring++){
+    const r = R_MIN + (R_MAX-R_MIN) * (ring/4);
+    const circle = document.createElementNS(svgNS,"circle");
+    circle.setAttribute("cx",CX); circle.setAttribute("cy",CY); circle.setAttribute("r",r);
+    circle.setAttribute("fill","none"); circle.setAttribute("stroke","#E7D9CE"); circle.setAttribute("stroke-width","1");
+    wheelSvg.appendChild(circle);
+  }
+  DIMENSOES.forEach((d,i)=>{
+    const angle = (360/N) * i;
+    const [x2,y2] = polar(CX,CY,R_MAX,angle);
+    const line = document.createElementNS(svgNS,"line");
+    line.setAttribute("x1",CX); line.setAttribute("y1",CY); line.setAttribute("x2",x2); line.setAttribute("y2",y2);
+    line.setAttribute("stroke","#E7D9CE"); line.setAttribute("stroke-width","1");
+    wheelSvg.appendChild(line);
+  });
+  const petalGroup = document.createElementNS(svgNS,"g"); petalGroup.setAttribute("id","petalGroup");
+  wheelSvg.appendChild(petalGroup);
+  const dotGroup = document.createElementNS(svgNS,"g"); dotGroup.setAttribute("id","dotGroup");
+  wheelSvg.appendChild(dotGroup);
+  const center = document.createElementNS(svgNS,"circle");
+  center.setAttribute("cx",CX); center.setAttribute("cy",CY); center.setAttribute("r",5); center.setAttribute("fill","#3B2233");
+  wheelSvg.appendChild(center);
+
+  DIMENSOES.forEach((d)=>{
+    const petal = document.createElementNS(svgNS,"path");
+    petal.setAttribute("class","petal"); petal.setAttribute("fill",d.cor); petal.setAttribute("fill-opacity","0.55");
+    petal.setAttribute("stroke",d.cor); petal.setAttribute("stroke-width","1.5"); petal.setAttribute("id","petal-"+d.id);
+    petalGroup.appendChild(petal);
+    const dot = document.createElementNS(svgNS,"circle");
+    dot.setAttribute("class","petal-dot"); dot.setAttribute("r","5"); dot.setAttribute("fill",d.cor);
+    dot.setAttribute("stroke","#fff"); dot.setAttribute("stroke-width","1.5"); dot.setAttribute("id","dot-"+d.id);
+    dotGroup.appendChild(dot);
+  });
+}
+
+function updatePetal(d, score, index){
+  const angle = (360/N) * index;
+  const r = R_MIN + (R_MAX-R_MIN) * (score/10);
+  const spread = (360/N) * 0.38;
+  const [tipX, tipY] = polar(CX,CY,r,angle);
+  const [baseA_X, baseA_Y] = polar(CX,CY,R_MIN,angle-spread);
+  const [baseB_X, baseB_Y] = polar(CX,CY,R_MIN,angle+spread);
+  const [ctrlA_X, ctrlA_Y] = polar(CX,CY,r*0.7,angle-spread*0.7);
+  const [ctrlB_X, ctrlB_Y] = polar(CX,CY,r*0.7,angle+spread*0.7);
+  const path = `M ${baseA_X} ${baseA_Y} Q ${ctrlA_X} ${ctrlA_Y} ${tipX} ${tipY} Q ${ctrlB_X} ${ctrlB_Y} ${baseB_X} ${baseB_Y} Z`;
+  const petalEl = document.getElementById("petal-"+d.id);
+  if(petalEl) petalEl.setAttribute("d",path);
+  const dot = document.getElementById("dot-"+d.id);
+  if(dot){ dot.setAttribute("cx",tipX); dot.setAttribute("cy",tipY); }
+}
+
+function renderForm(){
+  const form = document.getElementById('dimsForm');
+  form.innerHTML = DIMENSOES.map(d => `
+    <div class="dim-row">
+      <div class="dim-label"><span class="dim-swatch" style="background:${d.cor}"></span>${d.nome}</div>
+      <input type="range" min="0" max="10" step="1" value="${scores[d.id]}" id="range-${d.id}" oninput="onScoreChange('${d.id}', this.value)">
+      <div class="dim-score" id="score-${d.id}">${scores[d.id]}</div>
+    </div>
+  `).join("");
+}
+
+function onScoreChange(id, value){
+  scores[id] = parseInt(value,10);
+  document.getElementById("score-"+id).textContent = value;
+  refreshAll();
+  saveState();
+}
+
+function refreshAll(){
+  DIMENSOES.forEach((d,i) => updatePetal(d, scores[d.id], i));
+  const arr = DIMENSOES.map(d => ({dim:d, v:scores[d.id]}));
+  const avg = (arr.reduce((s,o)=>s+o.v,0)/arr.length).toFixed(1);
+  const maxV = Math.max(...arr.map(o=>o.v));
+  const minV = Math.min(...arr.map(o=>o.v));
+  const high = arr.filter(o=>o.v===maxV).map(o=>o.dim.nome).join(", ");
+  const low = arr.filter(o=>o.v===minV).map(o=>o.dim.nome).join(", ");
+  const elAvg = document.getElementById('statAvg');
+  if(elAvg){
+    elAvg.textContent = avg;
+    document.getElementById('statHigh').textContent = high;
+    document.getElementById('statLow').textContent = low;
+  }
+  renderPlanSelect();
+}
+
+/* ============ CAPÍTULOS (uma view por dimensão) ============ */
+function renderChapters(){
+  const container = document.getElementById('chaptersContainer');
+  container.innerHTML = DIMENSOES.map((d,i) => {
+    const etapaNum = i + 2; // etapa 1 é a roda
+    const prev = i===0 ? {id:"etapa-roda", label:"Avalie sua Roda"} : {id:"etapa-"+DIMENSOES[i-1].id, label:DIMENSOES[i-1].nome};
+    const next = i===DIMENSOES.length-1 ? {id:"plano", label:"Plano de Ação"} : {id:"etapa-"+DIMENSOES[i+1].id, label:DIMENSOES[i+1].nome};
+    return `
+    <section class="view" id="view-etapa-${d.id}">
+      <div class="wrap-wide">
+        <span class="step-eyebrow" style="background:${d.cor}">Etapa ${String(etapaNum).padStart(2,'0')} de ${String(TOTAL_ETAPAS).padStart(2,'0')}</span>
+        <h2>${d.nome}</h2>
+        <p style="color:var(--plum-soft); max-width:70ch; margin-top:14px;">${d.intro}</p>
+
+        <div class="chapter-intro">
+          <div class="info-box">
+            <h4>Sinais comuns de desequilíbrio</h4>
+            <ul>${d.sinais.map(s=>`<li>${s}</li>`).join("")}</ul>
+            <h4 style="margin-top:16px;">Malefícios quando negligenciada</h4>
+            <ul>${d.maleficios.map(s=>`<li>${s}</li>`).join("")}</ul>
+          </div>
+          <div class="info-box">
+            <h4>Benefícios de fortalecer esta área</h4>
+            <ul>${d.beneficios.map(s=>`<li>${s}</li>`).join("")}</ul>
+          </div>
+        </div>
+
+        <div class="exercises-title">Cinco exercícios terapêuticos</div>
+        ${d.exercicios.map((ex,j) => `
+          <details class="exercise">
+            <summary>
+              <span><span class="ex-num">EXERCÍCIO ${j+1}</span>${ex.nome}</span>
+              <span class="chev">+</span>
+            </summary>
+            <div class="exercise-body"><p>${ex.corpo}</p></div>
+          </details>
+        `).join("")}
+
+        <div class="step-nav">
+          <a class="step-nav-btn" onclick="goTo('${prev.id}')"><span class="lbl">Etapa anterior</span><span class="title">${prev.label}</span></a>
+          <a class="step-nav-btn next" onclick="goTo('${next.id}')"><span class="lbl">Próxima etapa</span><span class="title">${next.label}</span></a>
+        </div>
+      </div>
+    </section>
+  `; }).join("");
+}
+
+/* ============ MENU LATERAL ============ */
+function renderSidebar(){
+  const container = document.getElementById('sidebarEtapas');
+  container.innerHTML = DIMENSOES.map((d,i) => `
+    <button class="nav-item" data-view="etapa-${d.id}" onclick="goTo('etapa-${d.id}')">
+      <span class="num">${String(i+2).padStart(2,'0')}</span>
+      <span class="dot-swatch" style="background:${d.cor}"></span>
+      ${d.nome}
+    </button>
+  `).join("");
+  // insere o item da etapa 01 (roda) no topo da lista de etapas
+  container.insertAdjacentHTML('afterbegin', `
+    <button class="nav-item" data-view="etapa-roda" onclick="goTo('etapa-roda')">
+      <span class="num">01</span>
+      <span class="dot-swatch" style="background:var(--wine)"></span>
+      Avalie sua Roda
+    </button>
+  `);
+}
+
+/* ============ ROTEAMENTO ============ */
+function goTo(viewId){
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const target = document.getElementById('view-'+viewId);
+  if(target) target.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  const navBtn = document.querySelector(`.nav-item[data-view="${viewId}"]`);
+  if(navBtn) navBtn.classList.add('active');
+  window.location.hash = viewId;
+  document.getElementById('viewport').scrollTo({top:0, behavior:'instant' in window ? 'instant' : 'auto'});
+  window.scrollTo(0,0);
+  closeSidebar();
+  if(viewId === 'etapa-roda') updateRodaNextBtn();
+}
+
+function updateRodaNextBtn(){
+  const btn = document.getElementById('rodaNextBtn');
+  if(btn && DIMENSOES[0]){
+    btn.setAttribute('onclick', `goTo('etapa-${DIMENSOES[0].id}')`);
+    btn.querySelector('.title').textContent = DIMENSOES[0].nome;
+  }
+}
+
+/* ============ MENU MOBILE ============ */
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+document.getElementById('hamburgerBtn').addEventListener('click', () => {
+  sidebar.classList.add('open'); overlay.classList.add('show');
+});
+overlay.addEventListener('click', closeSidebar);
+function closeSidebar(){ sidebar.classList.remove('open'); overlay.classList.remove('show'); }
+
+/* ============ PLANO FINAL ============ */
+function renderPlanSelect(){
+  const container = document.getElementById('planSelect');
+  if(!container) return;
+  container.innerHTML = DIMENSOES.map(d => {
+    const isSel = selectedAreas.includes(d.id);
+    const disabled = (!isSel && selectedAreas.length>=3);
+    return `<div class="plan-chip ${isSel?'selected':''} ${disabled?'disabled':''}" onclick="toggleArea('${d.id}')">
+      <div class="dot" style="background:${d.cor}"></div>${d.nome}<br><span style="font-weight:400; opacity:.7;">nota ${scores[d.id]}</span>
+    </div>`;
+  }).join("");
+  const note = document.getElementById('planNote');
+  if(note){
+    note.textContent = selectedAreas.length===0
+      ? "Selecione de 1 a 3 áreas prioritárias."
+      : `${selectedAreas.length} de 3 áreas selecionadas.`;
+  }
+  renderPlanCards();
+}
+
+function toggleArea(id){
+  if(selectedAreas.includes(id)){
+    selectedAreas = selectedAreas.filter(a=>a!==id);
+  } else {
+    if(selectedAreas.length>=3) return;
+    selectedAreas.push(id);
+  }
+  renderPlanSelect();
+  saveState();
+}
+
+function renderPlanCards(){
+  const container = document.getElementById('planCards');
+  if(!container) return;
+  if(selectedAreas.length === 0){
+    container.innerHTML = `<div class="plan-empty">Nenhuma área selecionada ainda. Escolha acima as prioridades desta fase.</div>`;
+    return;
+  }
+  container.innerHTML = DIMENSOES.filter(d=>selectedAreas.includes(d.id)).map(d => {
+    const saved = planTexts[d.id] || {meta:"", compromisso:""};
+    return `
+    <div class="plan-card">
+      <div class="plan-card-head">
+        <h4><span class="dim-swatch" style="background:${d.cor}; display:inline-block;"></span>${d.nome}</h4>
+        <button class="clear-link" onclick="clearPlanCard('${d.id}')">Apagar respostas</button>
+      </div>
+      <label>Minha pequena meta para esta área</label>
+      <input type="text" placeholder="Ex: dormir antes das 23h em 4 noites da semana" id="meta-${d.id}" value="${escapeAttr(saved.meta)}" oninput="onPlanTextChange('${d.id}','meta',this.value)">
+      <label>Compromisso concreto de autocuidado (o que, quando, com que frequência)</label>
+      <textarea placeholder="Descreva um compromisso específico e realizável" id="compromisso-${d.id}" oninput="onPlanTextChange('${d.id}','compromisso',this.value)">${saved.compromisso}</textarea>
+    </div>`;
+  }).join("");
+}
+
+function escapeAttr(str){
+  return (str || "").replace(/&/g,"&amp;").replace(/"/g,"&quot;");
+}
+
+function onPlanTextChange(dimId, field, value){
+  if(!planTexts[dimId]) planTexts[dimId] = {meta:"", compromisso:""};
+  planTexts[dimId][field] = value;
+  saveState();
+}
+
+function clearPlanCard(dimId){
+  if(!confirm("Apagar a meta e o compromisso registrados para esta área?")) return;
+  planTexts[dimId] = {meta:"", compromisso:""};
+  saveState();
+  renderPlanCards();
+}
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  if(!confirm("Tem certeza que deseja apagar todas as notas e respostas registradas? Essa ação não pode ser desfeita.")) return;
+  DIMENSOES.forEach(d => scores[d.id] = 5);
+  selectedAreas = [];
+  planTexts = {};
+  localStorage.removeItem(STORAGE_KEY);
+  renderForm();
+  refreshAll();
+  goTo('intro');
+});
+
+/* ============ INIT ============ */
+loadState();
+buildWheel();
+renderForm();
+renderChapters();
+renderSidebar();
+refreshAll();
+updateRodaNextBtn();
+
+const initialView = (window.location.hash || "").replace('#','');
+const validViews = ['intro','etapa-roda','plano', ...DIMENSOES.map(d=>'etapa-'+d.id)];
+goTo(validViews.includes(initialView) ? initialView : 'intro');
+</script>
+</body>
+</html>
